@@ -1,4 +1,4 @@
-# SEO optimization library for projects developed with the Codeigniter framework
+# SEO optimization library for Codeigniter projects
 
 This is a library to assist in the SEO optimization process for websites developed with the Codeigniter framework.
 
