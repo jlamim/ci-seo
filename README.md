@@ -2,7 +2,9 @@
 
 This is a library to assist in the SEO optimization process for websites developed with the Codeigniter framework.
 
-Supported CodeIgniter Version: 3.1.x
+It adds the necessary meta tags so that social networking platforms like Facebook, Twitter and Linkedin, for example, can display the title, description and illustrative image related to the shared link.
+
+**Supported CodeIgniter Version:** 3.1.x
 
 ## Installation
 
@@ -26,3 +28,30 @@ In the `application/config/ci_seo.php` file you will find an array of configurat
 | twitter\_user     | string  | Twitter username including @                                                   |
 | fb\_app\_id       | integer | Facebook app ID with which the site is associated \(developer\.facebook\.com\) |
 | fb\_page\_id      | integer | Facebook Page ID with which the site is associated                             |
+
+## How to use
+
+After performing the installation and configuration, just call the method `$this->ci_seo->add_tags()` informing the parameters corresponding to the title, description and illustrative image of the page.
+
+```
+$this->ci_seo->add_tags('Page title', 'Page Description', 'image/path');
+```
+
+The `$this->ci_seo->add_tags()` method can be called either directly inside the `<head> </head>` tag or inside some method in the controller, returning the data to a variable that should be passed to the view should be retrieved inside `<head> </head>`.
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <?= $this->ci_seo->add_tags('Page title', 'Page Description', 'image/path'); ?>
+</head>
+<body></body>
+</html>
+```
+
+## Contribute
+
+Feel free to suggest and implement improvements, new features and bug fixes.
+
+Fork the repository, apply the changes and submit your Pull Request.
