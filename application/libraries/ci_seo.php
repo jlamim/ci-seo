@@ -18,45 +18,67 @@ class CI_Seo
         $current_url = current_url();
         echo "<meta property='og:url' content='$current_url' />\n";
 
+        $this->set_titletags($title);
+        $this->set_descriptiontags($description);
+        $this->set_imagetags($image);
+        $this->set_twtags();
+        $this->set_fbtags();
+        $this->set_canonical();
+    }
+
+    private function set_titletags($title)
+    {        
         if ($title != "") {
+            echo "<title>$title</title>\n";
             echo "<meta property='og:title' content='$title' />\n";
             echo "<meta name='twitter:title' content='$title' />\n";
         } elseif ($this->CI->config->item('site_title') != "") {
+            echo "<title>" . $this->CI->config->item('site_title') . "</title>\n";
             echo "<meta property='og:title' content='" . $this->CI->config->item('site_title') . "' />\n";
             echo "<meta property='og:site_name' content='" . $this->CI->config->item('site_title') . "' />\n";
             echo "<meta name='twitter:title' content='" . $this->CI->config->item('site_title') . "' />\n";
         }
 
+    }
+
+    private function set_descriptiontags($description)
+    {       
         if ($description != "") {
+            echo "<meta name='description' content='$description'/>\n";
             echo "<meta property='og:description' content='$description' />\n";
             echo "<meta name='twitter:description' content='$description' />\n";
         } elseif ($this->CI->config->item('site_description') != "") {
+            echo "<meta name='description' content='" . $this->CI->config->item('site_description') . "'/>\n";
             echo "<meta property='og:description' content='" . $this->CI->config->item('site_description') . "' />\n";
             echo "<meta name='twitter:description' content='" . $this->CI->config->item('site_description') . "' />\n";
         }
+    }
+
+    private function set_imagetags($image)
+    {        
+        $image_path = null;
 
         if ($image != "") {
-            list($width, $height) = getimagesize($image);
-            echo "<meta property='og:image' content='$image' />\n";
-            echo "<meta property='og:image:secure_url' content='$image' />\n";
-            echo "<meta name='twitter:image' content='$image' />\n";
-            echo "<meta name='twitter:card' content='summary_large_image' />\n";
-            echo "<meta property='og:image:width' content='$width' />\n<meta property='og:image:height' content='$height' />";
+            $image_path = $this->format_imagetag($image);            
         } elseif ($this->CI->config->item('site_image') != "") {
-            list($width, $height) = getimagesize($this->CI->config->item('site_image'));
-            echo "<meta property='og:image' content='" . $this->CI->config->item('site_image') . "' />\n";
-            echo "<meta property='og:image:secure_url' content='" . $this->CI->config->item('site_image') . "' />\n";
-            echo "<meta name='twitter:card' content='summary_large_image' />\n";
-            echo "<meta name='twitter:image' content='" . $this->CI->config->item('site_image') . "' />\n";
-            echo "<meta property='og:image:width' content='$width' />\n<meta property='og:image:height' content='$height' />";
+            $image_path = $this->format_imagetag($this->CI->config->item('site_image'));            
         }
 
+        if($image_path){
+            list($width, $height) = getimagesize($image_path);
+            echo "<meta property='og:image' content='$image_path' />\n";
+            echo "<meta property='og:image:secure_url' content='$image_path' />\n";
+            echo "<meta name='twitter:image' content='$image_path' />\n";
+            echo "<meta name='twitter:card' content='summary_large_image' />\n";
+            echo "<meta property='og:image:width' content='$width' />\n<meta property='og:image:height' content='$height' />\n";
+        }        
+    }
+
+    private function set_twtags()
+    {
         if ($this->CI->config->item('twitter_user') != "") {
             echo "<meta name='twitter:site' content='" . $this->CI->config->item('twitter_user') . "' />\n";
         }
-
-        $this->set_fbtags();
-        $this->set_canonical();
     }
 
     private function set_fbtags()
@@ -74,6 +96,17 @@ class CI_Seo
     {
         if ($this->CI->config->item('canonical_url') != "") {
             echo "<link rel='canonical' href='" . $this->CI->config->item('canonical_url') . "' />\n";
+        }
+    }
+
+    private function format_imagetag($image_path)
+    {
+        $path = parse_url($image_path);
+
+        if ($path['scheme'] == "http" || $path['scheme'] == "https") {
+            return $image_path;
+        } else {
+            return base_url($image_path);
         }
     }
 }
